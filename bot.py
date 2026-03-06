@@ -5,7 +5,8 @@ from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 import yt_dlp
 import tools # Humara video processing engine (tools.py)
-
+from flask import Flask
+import threading
 # Environment Variables for Hugging Face
 API_ID = os.environ.get("API_ID", "YOUR_API_ID")
 API_HASH = os.environ.get("API_HASH", "YOUR_API_HASH")
@@ -251,6 +252,23 @@ async def process_user_reply(client, message: Message):
         if user_id in user_data:
             del user_data[user_id]
         await status_msg.delete()
+# ==========================================
+# HEALTH CHECK SERVER (For Hugging Face)
+# ==========================================
+web_app = Flask(__name__)
+
+@web_app.route('/')
+def health_check():
+    return "AyuPrime Video Tools Bot is Running Perfectly! 🚀"
+
+def run_web():
+    # Hugging Face defaults to port 7860
+    web_app.run(host="0.0.0.0", port=7860)
+
+# Background thread me server start karna taaki bot block na ho
+threading.Thread(target=run_web, daemon=True).start()
+
+# ... (Iske niche tumhara baqi pura app.on_message wala bot code waisa hi rahega) ...
 
 if __name__ == "__main__":
     print("AyuPrime Bot is running...")
