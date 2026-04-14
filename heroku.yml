@@ -1,6 +1,6 @@
 build:
   docker:
-    worker: Dockerfile
+    worker: Bokafile
 
 run:
   worker: python bot.py
